@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./App.css";
-import { StatisticTab } from "./components/StatisticTab";
-import { DetailedPage } from "./components/DetailedPage";
+import { StatisticTab } from "./components/statistic/StatisticTab";
+import { DetailedPage } from "./components/statistic/DetailedPage";
 import { Box, Tab } from "@mui/material";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 
