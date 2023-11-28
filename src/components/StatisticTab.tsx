@@ -2,8 +2,9 @@ import React from "react";
 import { Grid, LinearProgress } from "@mui/material";
 import { Bar } from "react-chartjs-2";
 import "chart.js/auto";
+import { StatisticBox } from "./StatisticBox";
 
-export const HomePage = () => {
+export const StatisticTab = () => {
   return (
     <div
       style={{
@@ -13,18 +14,6 @@ export const HomePage = () => {
       }}
     >
       <Grid container sx={{ maxWidth: "80%" }}>
-        <Grid
-          item
-          xs={12}
-          sx={{
-            height: "100px",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <h1>HOME PAGE</h1>
-        </Grid>
         <Grid
           item
           xs={12}
@@ -120,37 +109,6 @@ export const HomePage = () => {
           </Grid>
         </Grid>
       </Grid>
-    </div>
-  );
-};
-
-const StatisticBox = ({
-  statName,
-  statNum,
-}: {
-  statName: string;
-  statNum: number;
-}) => {
-  const boxSize = "150px";
-
-  return (
-    <div
-      style={{
-        border: "1px solid gray",
-        padding: "10px",
-        borderRadius: "5px",
-        width: boxSize,
-        height: "100px",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "space-between",
-      }}
-    >
-      <div style={{ marginBottom: "10px" }}>{statName}</div>
-      <div
-        style={{ fontSize: "24px", fontWeight: "bold", marginBottom: "10px" }}
-      >{`${statNum}%`}</div>
-      <LinearProgress variant="determinate" value={statNum} />
     </div>
   );
 };

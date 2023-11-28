@@ -1,23 +1,41 @@
-import React from "react";
+import React, { useState } from "react";
 import "./App.css";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { HomePage } from "./components/HomePage";
+import { StatisticTab } from "./components/StatisticTab";
 import { DetailedPage } from "./components/DetailedPage";
+import { Box, Tab } from "@mui/material";
+import { TabContext, TabList, TabPanel } from "@mui/lab";
 
-enum RouteEnum {
-  HOME_PAGE = "/",
-  DETAILED_PAGE = "/detailed",
+enum TabEnum {
+  STATISTIC = "STATISTIC",
+  DETAILED = "DETAILED",
 }
 
 function App() {
+  const [tab, setTab] = useState(TabEnum.STATISTIC);
+
+  const handleChange = (event: React.SyntheticEvent, newValue: any) => {
+    setTab(newValue);
+  };
+
   return (
     <div className="App">
-      <Router>
-        <Routes>
-          <Route path={RouteEnum.HOME_PAGE} element={<HomePage />} />
-          <Route path={RouteEnum.DETAILED_PAGE} element={<DetailedPage />} />
-        </Routes>
-      </Router>
+      <h1>ESLINT VISUALIZATION</h1>
+      <Box sx={{ width: "100%", typography: "body1" }}>
+        <TabContext value={tab}>
+          <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+            <TabList onChange={handleChange} aria-label="lab API tabs example">
+              <Tab label="Statistic" value={TabEnum.STATISTIC} />
+              <Tab label="Detailed" value={TabEnum.DETAILED} />
+            </TabList>
+          </Box>
+          <TabPanel value={TabEnum.STATISTIC}>
+            <StatisticTab />
+          </TabPanel>
+          <TabPanel value={TabEnum.DETAILED}>
+            <DetailedPage />
+          </TabPanel>
+        </TabContext>
+      </Box>
     </div>
   );
 }
