@@ -1,0 +1,33 @@
+{
+  "warnings": {
+    "strict": 102,
+    "no-restricted-globals": 24,
+    "no-unused-expressions": 1079,
+    "no-sequences": 1846,
+    "no-mixed-operators": 546,
+    "new-parens": 74,
+    "eqeqeq": 36,
+    "default-case": 125,
+    "no-fallthrough": 68,
+    "no-cond-assign": 25,
+    "no-use-before-define": 58,
+    "no-useless-escape": 8,
+    "no-undef": 12,
+    "no-label-var": 29,
+    "no-labels": 61,
+    "no-extra-label": 8,
+    "getter-return": 2,
+    "valid-typeof": 2,
+    "no-self-compare": 2,
+    "no-control-regex": 1,
+    "no-func-assign": 12,
+    "no-unused-vars": 6,
+    "no-redeclare": 1,
+    "no-loop-func": 13,
+    "array-callback-return": 1,
+    "@typescript-eslint/no-unused-vars": 19,
+    "react-hooks/exhaustive-deps": 2
+  },
+  "allIssues": 4164,
+  "errors": {}
+}

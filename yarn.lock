@@ -3507,6 +3507,11 @@ cliui@^7.0.2:
     strip-ansi "^6.0.0"
     wrap-ansi "^7.0.0"
 
+cloc@^1.98.0-cloc:
+  version "1.98.0-cloc"
+  resolved "https://registry.yarnpkg.com/cloc/-/cloc-1.98.0-cloc.tgz#bfa4f1ab8c82df18c2678164c0d1699198a2a5b3"
+  integrity sha512-orSf0Lg13jCemPXVQ22QjlvdV9YSzguYE3BdtkRu7bIyVQq1DGHhZfu5tdCp20Qn3Na/9V6n0j81MK+uHIZPgQ==
+
 clsx@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/clsx/-/clsx-2.0.0.tgz#12658f3fd98fafe62075595a5c30e43d18f3d00b"

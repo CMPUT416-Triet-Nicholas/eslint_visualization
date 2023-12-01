@@ -2,8 +2,11 @@ import React from "react";
 import { Grid } from "@mui/material";
 import { StatisticBox } from "./StatisticBox";
 import { HorizontalBarChart } from "./HorizontalBarChart";
+import data from "../../processedESLint.json";
 
 export const StatisticTab = () => {
+  const hasErrors = Object.keys(data.errors).length > 0;
+
   return (
     <div
       style={{
@@ -23,7 +26,7 @@ export const StatisticTab = () => {
             height: "150px",
           }}
         >
-          <StatisticBox statName="STAT NAME" statNum={40} />
+          <StatisticBox statName="ALL ISSUES" statNum={data.allIssues} />
         </Grid>
         <Grid item xs={12}>
           <Grid container>
@@ -77,7 +80,7 @@ export const StatisticTab = () => {
           <Grid container spacing={2}>
             <Grid
               item
-              xs={6}
+              xs={hasErrors ? 6 : 12}
               sx={{
                 height: "100%",
                 display: "flex",
@@ -87,24 +90,26 @@ export const StatisticTab = () => {
             >
               <div style={{ height: "300px", width: "100%" }}>
                 {" "}
-                <HorizontalBarChart />
+                <HorizontalBarChart data={data.warnings} label="Warnings" />
               </div>
             </Grid>
-            <Grid
-              item
-              xs={6}
-              sx={{
-                height: "100%",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <div style={{ height: "300px", width: "100%" }}>
-                {" "}
-                <HorizontalBarChart />
-              </div>
-            </Grid>
+            {hasErrors ? (
+              <Grid
+                item
+                xs={6}
+                sx={{
+                  height: "100%",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <div style={{ height: "300px", width: "100%" }}>
+                  {" "}
+                  <HorizontalBarChart data={data.errors} label="Errors" />
+                </div>
+              </Grid>
+            ) : null}
           </Grid>
         </Grid>
       </Grid>

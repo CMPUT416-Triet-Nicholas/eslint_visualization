@@ -4,9 +4,11 @@ import { LinearProgress } from "@mui/material";
 export const StatisticBox = ({
   statName,
   statNum,
+  isPercentage = false,
 }: {
   statName: string;
   statNum: number;
+  isPercentage?: boolean;
 }) => {
   const boxSize = "150px";
 
@@ -26,8 +28,12 @@ export const StatisticBox = ({
       <div style={{ marginBottom: "10px" }}>{statName}</div>
       <div
         style={{ fontSize: "24px", fontWeight: "bold", marginBottom: "10px" }}
-      >{`${statNum}%`}</div>
-      <LinearProgress variant="determinate" value={statNum} />
+      >
+        {isPercentage ? `${statNum}%` : `${statNum}`}
+      </div>
+      {isPercentage ? (
+        <LinearProgress variant="determinate" value={statNum} />
+      ) : null}
     </div>
   );
 };
