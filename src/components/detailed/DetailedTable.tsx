@@ -10,14 +10,16 @@ import Paper from "@mui/material/Paper";
 import { IconButton } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
+import data from "../../processedESLint.json";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: theme.palette.common.black,
     color: theme.palette.common.white,
+    fontSize: 20,
   },
   [`&.${tableCellClasses.body}`]: {
-    fontSize: 14,
+    fontSize: 20,
   },
 }));
 
@@ -31,48 +33,62 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-function createData(
-  name: string,
-  calories: number,
-  fat: number,
-  carbs: number,
-  protein: number
-) {
-  return { name, calories, fat, carbs, protein };
+interface TableData {
+  [key: string]: TableDataItem;
 }
 
-const rows = [
-  createData("Frozen yoghurt", 159, 6.0, 24, 4.0),
-  createData("Ice cream sandwich", 237, 9.0, 37, 4.3),
-  createData("Eclair", 262, 16.0, 24, 6.0),
-  createData("Cupcake", 305, 3.7, 67, 4.3),
-  createData("Gingerbread", 356, 16.0, 49, 3.9),
-];
+interface TableDataItem {
+  warnings: WarningData[];
+  errors: ErrorData[];
+}
+interface WarningData {
+  ruleId: string;
+  severity: number;
+  message: string;
+  line: number;
+  column: number;
+}
+
+interface ErrorData {
+  fatal: boolean;
+  severity: number;
+  line: number;
+  column: number;
+  message: string;
+}
 
 export const DetailedTable = () => {
+  const [tableData, setTableData] = React.useState<TableData>(data.fileDetails);
+
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
         <TableHead>
           <TableRow>
-            <StyledTableCell>Dessert (100g serving)</StyledTableCell>
-            <StyledTableCell align="right">Calories</StyledTableCell>
-            <StyledTableCell align="right">Fat&nbsp;(g)</StyledTableCell>
-            <StyledTableCell align="right">Carbs&nbsp;(g)</StyledTableCell>
-            <StyledTableCell align="right">Protein&nbsp;(g)</StyledTableCell>
+            <StyledTableCell>File name (relative)</StyledTableCell>
+            <StyledTableCell align="left">Warnings</StyledTableCell>
+            <StyledTableCell align="left">Errors</StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
-            <DetailedTableRow row={row} />
-          ))}
+          {Object.keys(tableData).map((fileName) => {
+            return (
+              <DetailedTableRow row={tableData[fileName]} fileName={fileName} />
+            );
+          })}
         </TableBody>
       </Table>
     </TableContainer>
   );
 };
 
-const DetailedTableRow = ({ row }: { row: any }) => {
+const DetailedTableRow = ({
+  row,
+  fileName,
+}: {
+  row: TableDataItem;
+  fileName: string;
+}) => {
   const [isExpanded, setIsExpanded] = React.useState(false);
 
   const handleExpandClick = () => {
@@ -81,23 +97,21 @@ const DetailedTableRow = ({ row }: { row: any }) => {
 
   return (
     <>
-      <StyledTableRow key={row.name}>
+      <StyledTableRow key={fileName}>
         <StyledTableCell component="th" scope="row">
           <IconButton onClick={handleExpandClick}>
             {isExpanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
           </IconButton>
-          {row.name}
+          {fileName}
         </StyledTableCell>
-        <StyledTableCell align="right">{row.calories}</StyledTableCell>
-        <StyledTableCell align="right">{row.fat}</StyledTableCell>
-        <StyledTableCell align="right">{row.carbs}</StyledTableCell>
-        <StyledTableCell align="right">{row.protein}</StyledTableCell>
+        <StyledTableCell align="left">{row.warnings.length}</StyledTableCell>
+        <StyledTableCell align="left">{row.errors.length}</StyledTableCell>
       </StyledTableRow>
       {isExpanded && (
         <TableRow>
           <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
             <div style={{ height: "200px" }}>
-              Expanded content for {row.name}
+              Expanded content for {fileName}
             </div>
           </TableCell>
         </TableRow>

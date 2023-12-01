@@ -48,6 +48,28 @@ const getTotalIssues = (reportPath) => {
   return totalIssues;
 };
 
+const getFilesDetail = (reportPath) => {
+  const report = JSON.parse(fs.readFileSync(reportPath, "utf8"));
+  let data = {};
+
+  report.forEach((result) => {
+    const fileName = result.filePath.replace(DIR_PREFIX, "");
+
+    data[fileName] = { warnings: [], errors: [] };
+
+    result.messages.forEach((message) => {
+      // "fatal" means it has errors
+      if ("fatal" in message) {
+        data[fileName].errors.push(message);
+      } else {
+        data[fileName].warnings.push(message);
+      }
+    });
+  });
+
+  return data;
+};
+
 function main() {
   const data = {};
   const fileName = "./src/data/eslint-report.json";
@@ -56,6 +78,7 @@ function main() {
   data["warnings"] = groupByWarningIssues(fileName);
   data["allIssues"] = getTotalIssues(fileName);
   data["errors"] = groupByFileErrors(fileName);
+  data["fileDetails"] = getFilesDetail(fileName);
 
   fs.writeFileSync(outputFileName, JSON.stringify(data, null, 2));
 }

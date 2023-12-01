@@ -80,7 +80,7 @@ export const StatisticTab = () => {
           <Grid container spacing={2}>
             <Grid
               item
-              xs={hasErrors ? 6 : 12}
+              xs={12}
               sx={{
                 height: "100%",
                 display: "flex",
@@ -93,7 +93,7 @@ export const StatisticTab = () => {
                 <HorizontalBarChart data={data.warnings} label="Warnings" />
               </div>
             </Grid>
-            {hasErrors ? (
+            {/* {hasErrors ? (
               <Grid
                 item
                 xs={6}
@@ -109,7 +109,7 @@ export const StatisticTab = () => {
                   <HorizontalBarChart data={data.errors} label="Errors" />
                 </div>
               </Grid>
-            ) : null}
+            ) : null} */}
           </Grid>
         </Grid>
       </Grid>
