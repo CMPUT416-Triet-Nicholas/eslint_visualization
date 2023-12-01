@@ -5,14 +5,19 @@ import TableBody from "@mui/material/TableBody";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
-import { Box, Grid, IconButton } from "@mui/material";
+import TableRow, { TableRowProps } from "@mui/material/TableRow";
+import { Box, Grid, IconButton, TextField } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import data from "../../processedESLint.json";
 import { FileTable } from "./FileTable";
+import { red, yellow } from "@mui/material/colors";
+import { Filter } from "./Filter";
+
+interface StyledTableRowProps extends TableRowProps {
+  rowColor?: string; // Add the custom prop for row color
+}
 
 export const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -25,15 +30,17 @@ export const StyledTableCell = styled(TableCell)(({ theme }) => ({
   },
 }));
 
-export const StyledTableRow = styled(TableRow)(({ theme }) => ({
-  "&:nth-of-type(odd)": {
-    backgroundColor: theme.palette.action.hover,
-  },
-  // hide last border
-  "&:last-child td, &:last-child th": {
-    border: 0,
-  },
-}));
+export const StyledTableRow = styled(TableRow)<StyledTableRowProps>(
+  ({ theme, rowColor }) => ({
+    backgroundColor: rowColor || "inherit", // Use rowColor if provided, else default
+    "&:nth-of-type(odd)": {
+      backgroundColor: rowColor || theme.palette.action.hover, // Same here
+    },
+    "&:last-child td, &:last-child th": {
+      border: 0,
+    },
+  })
+);
 
 interface TableData {
   [key: string]: TableDataItem;
@@ -62,10 +69,58 @@ interface ErrorData {
 
 export const DetailedTable = () => {
   const [tableData, setTableData] = React.useState<TableData>(data.fileDetails);
+  const [searchQuery, setSearchQuery] = React.useState("");
+  const [filterWarnings, setFilterWarnings] = React.useState(false);
+  const [filterErrors, setFilterErrors] = React.useState(false);
+
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(event.target.value.toLowerCase());
+  };
+
+  const handleWarningFilterChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setFilterWarnings(event.target.checked);
+  };
+
+  const handleErrorFilterChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setFilterErrors(event.target.checked);
+  };
+
+  const filteredData: TableData = Object.keys(tableData)
+    .filter((fileName) => {
+      const file = tableData[fileName];
+      const matchesSearch = fileName.toLowerCase().includes(searchQuery);
+      const matchesWarningFilter =
+        !filterWarnings ||
+        (filterWarnings &&
+          file.warnings.length > 0 &&
+          file.errors.length === 0);
+      const matchesErrorFilter =
+        !filterErrors || (filterErrors && file.errors.length > 0);
+      return matchesSearch && matchesWarningFilter && matchesErrorFilter;
+    })
+    .reduce((acc: any, key) => {
+      acc[key] = tableData[key];
+      return acc;
+    }, {});
 
   return (
-    <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 700 }} aria-label="customized table">
+    <TableContainer>
+      <Filter
+        searchQuery={searchQuery}
+        handleSearchChange={handleSearchChange}
+        handleWarningFilterChange={handleWarningFilterChange}
+        handleErrorFilterChange={handleErrorFilterChange}
+        filterWarnings={filterWarnings}
+        filterErrors={filterErrors}
+      />
+      <Table
+        sx={{ minWidth: 700, marginTop: "20px" }}
+        aria-label="customized table"
+      >
         <TableHead>
           <TableRow>
             <StyledTableCell>File name (relative)</StyledTableCell>
@@ -74,11 +129,15 @@ export const DetailedTable = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {Object.keys(tableData).map((fileName) => {
-            return (
-              <DetailedTableRow row={tableData[fileName]} fileName={fileName} />
-            );
-          })}
+          {Object.keys(filteredData)
+            .filter((fileName) => fileName.toLowerCase().includes(searchQuery))
+            .map((fileName) => (
+              <DetailedTableRow
+                key={fileName}
+                row={tableData[fileName]}
+                fileName={fileName}
+              />
+            ))}
         </TableBody>
       </Table>
     </TableContainer>
@@ -97,10 +156,21 @@ const DetailedTableRow = ({
   const handleExpandClick = () => {
     setIsExpanded(!isExpanded);
   };
+  const hasError = row.errors.length > 0;
+  const hasWarning = row.warnings.length > 0;
+
+  const rowColorFactory = () => {
+    if (hasError) {
+      return red[100];
+    } else if (hasWarning) {
+      return yellow[100];
+    }
+    return undefined;
+  };
 
   return (
     <>
-      <StyledTableRow key={fileName}>
+      <StyledTableRow key={fileName} rowColor={rowColorFactory()}>
         <StyledTableCell component="th" scope="row">
           <IconButton onClick={handleExpandClick}>
             {isExpanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
