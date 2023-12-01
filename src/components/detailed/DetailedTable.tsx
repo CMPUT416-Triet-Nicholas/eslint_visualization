@@ -7,12 +7,14 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { IconButton } from "@mui/material";
+import { Box, Grid, IconButton } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import data from "../../processedESLint.json";
+import { FileTable } from "./FileTable";
 
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
+export const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: theme.palette.common.black,
     color: theme.palette.common.white,
@@ -23,7 +25,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   },
 }));
 
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
+export const StyledTableRow = styled(TableRow)(({ theme }) => ({
   "&:nth-of-type(odd)": {
     backgroundColor: theme.palette.action.hover,
   },
@@ -50,6 +52,7 @@ interface WarningData {
 }
 
 interface ErrorData {
+  ruleId: any;
   fatal: boolean;
   severity: number;
   line: number;
@@ -110,12 +113,92 @@ const DetailedTableRow = ({
       {isExpanded && (
         <TableRow>
           <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-            <div style={{ height: "200px" }}>
-              Expanded content for {fileName}
-            </div>
+            <ExpandedRow row={row} fileName={fileName} />
           </TableCell>
         </TableRow>
       )}
     </>
+  );
+};
+
+const ExpandedRow = ({
+  row,
+  fileName,
+}: {
+  row: TableDataItem;
+  fileName: string;
+}) => {
+  const [currentIssueName, setIssueName] = React.useState("error");
+  const groupByIssues: any = { error: [] };
+  row.warnings.forEach((warning) => {
+    if (!(warning.ruleId in groupByIssues)) {
+      groupByIssues[warning.ruleId] = [];
+    }
+
+    groupByIssues[warning.ruleId].push(warning);
+  });
+
+  row.errors.forEach((error) => {
+    error.ruleId = "error";
+    groupByIssues["error"].push(error);
+  });
+
+  return (
+    <Grid container sx={{ marginTop: "50px", marginBottom: "50px" }}>
+      <Grid item xs={5}>
+        <h3>All Issues</h3>
+        {Object.keys(groupByIssues).map((issueName) => (
+          <Box mb={2}>
+            <IssuesBox
+              issueName={issueName}
+              values={groupByIssues[issueName]}
+              setIssueName={setIssueName}
+            />
+          </Box>
+        ))}
+      </Grid>
+      <Grid item xs={1}></Grid>
+      <Grid item xs={6}>
+        <FileTable fileName={fileName} data={groupByIssues[currentIssueName]} />
+      </Grid>
+    </Grid>
+  );
+};
+
+const IssuesBox = ({
+  issueName,
+  values,
+  setIssueName,
+}: {
+  issueName: string;
+  values: any[];
+  setIssueName: Function;
+}) => {
+  return (
+    <Grid
+      container
+      sx={{
+        border: "1px solid #ccc",
+        height: "50px",
+        fontSize: "18px",
+        alignItems: "center",
+        backgroundColor: "#f5f5f5",
+        borderRadius: "4px",
+        boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
+        padding: "0 10px",
+      }}
+    >
+      <Grid item xs={6} sx={{ fontWeight: "bold" }}>
+        {issueName}
+      </Grid>
+      <Grid item xs={4} sx={{ textAlign: "center" }}>
+        {values.length} issues
+      </Grid>
+      <Grid item xs={2} sx={{ textAlign: "right" }}>
+        <IconButton onClick={() => setIssueName(issueName)}>
+          <NavigateNextIcon />
+        </IconButton>
+      </Grid>
+    </Grid>
   );
 };
