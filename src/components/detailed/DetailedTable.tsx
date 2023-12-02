@@ -68,7 +68,7 @@ interface ErrorData {
 }
 
 export const DetailedTable = () => {
-  const [tableData, setTableData] = React.useState<TableData>(data.fileDetails);
+  const [tableData, setTableData] = React.useState<any>(data.fileDetails);
   const [searchQuery, setSearchQuery] = React.useState("");
   const [filterWarnings, setFilterWarnings] = React.useState(false);
   const [filterErrors, setFilterErrors] = React.useState(false);

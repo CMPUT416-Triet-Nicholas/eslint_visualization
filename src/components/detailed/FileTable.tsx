@@ -26,6 +26,7 @@ export const FileTable = ({
             <StyledTableCell align="left">Violated rule</StyledTableCell>
             <StyledTableCell align="left">Line</StyledTableCell>
             <StyledTableCell align="left">Column</StyledTableCell>
+            <StyledTableCell align="left">Message</StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -53,8 +54,13 @@ const DetailedTableRow = ({
           {fileName}
         </StyledTableCell>
         <StyledTableCell align="left">{row.ruleId}</StyledTableCell>
-        <StyledTableCell align="left">{row.line}</StyledTableCell>
-        <StyledTableCell align="left">{row.column}</StyledTableCell>
+        <StyledTableCell align="left">
+          {row.line ? row.line : "Entire file"}
+        </StyledTableCell>
+        <StyledTableCell align="left">
+          {row.column ? row.column : "Entire file"}
+        </StyledTableCell>
+        <StyledTableCell align="left">{row.message}</StyledTableCell>
       </StyledTableRow>
     </>
   );

@@ -18,15 +18,6 @@ function runEslint(
     const eslintCommand = `npx eslint "${resolvedDirectory}" --format json --output-file "${resolvedOutputFilePath}"`;
 
     exec(eslintCommand, (error, stdout, stderr) => {
-      if (error) {
-        console.error(`Error occurred: ${error}`);
-        return reject(error);
-      }
-      if (stderr) {
-        console.error(`Error in ESLint execution: ${stderr}`);
-        return reject(stderr);
-      }
-      console.log(`ESLint report generated: ${resolvedOutputFilePath}`);
       resolve();
     });
   });
@@ -37,14 +28,6 @@ function runESLintProcessor() {
     const command = `node ./src/data/dataProcessor.js`;
 
     exec(command, (error, stdout, stderr) => {
-      if (error) {
-        console.error(`Error occurred: ${error}`);
-        return reject(error);
-      }
-      if (stderr) {
-        console.error(`Error in ESLint Processor execution: ${stderr}`);
-        return reject(stderr);
-      }
       resolve();
     });
   });
