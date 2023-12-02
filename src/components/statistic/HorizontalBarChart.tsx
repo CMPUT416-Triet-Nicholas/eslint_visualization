@@ -26,7 +26,7 @@ export const HorizontalBarChart = ({
   };
 
   return (
-    <div style={{ height: `${chartHeight}px`, width: "100%" }}>
+    <div style={{ width: "100%" }}>
       <Bar data={chartData} options={options} />
     </div>
   );
