@@ -1,7 +1,6 @@
 const fs = require("fs");
 
-const DIR_PREFIX =
-  "/Users/littlepanda312/dev/404f23project-hypertext-assassins/frontend/";
+const DIR_PREFIX = process.cwd();
 
 const groupByWarningIssues = (filePath) => {
   const report = JSON.parse(fs.readFileSync(filePath, "utf8"));
@@ -73,7 +72,9 @@ const getFilesDetail = (reportPath) => {
 function main() {
   const data = {};
   const fileName = "./src/data/eslint-report.json";
-  const outputFileName = "processedESLint.json";
+  const outputFileName = "./src/processedESLint.json";
+
+  console.log("DIR PREFIX: ", DIR_PREFIX);
 
   data["warnings"] = groupByWarningIssues(fileName);
   data["allIssues"] = getTotalIssues(fileName);
