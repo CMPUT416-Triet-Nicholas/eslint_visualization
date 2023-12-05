@@ -17,9 +17,19 @@ function runEslint(
 
     const eslintCommand = `npx eslint "${resolvedDirectory}" --format json --output-file "${resolvedOutputFilePath}"`;
 
-    exec(eslintCommand, (error, stdout, stderr) => {
-      resolve();
-    });
+    exec(
+      eslintCommand,
+      { maxBuffer: 1024 * 1024 * 10, env: process.env, cwd: resolvedDirectory },
+      (error, stdout, stderr) => {
+        if (error) {
+          console.log("Run eslint error: ", error);
+        }
+        if (stderr) {
+          console.log("Run eslint error: ", stderr);
+        }
+        resolve();
+      }
+    );
   });
 }
 
