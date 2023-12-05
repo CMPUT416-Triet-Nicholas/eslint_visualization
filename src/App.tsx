@@ -19,7 +19,7 @@ function App() {
 
   return (
     <div className="App">
-      <h1>ESLINT VISUALIZATION</h1>
+      <h1>ESLINT VISUALIZATION DASHBOARD</h1>
       <Box sx={{ width: "100%", typography: "body1" }}>
         <TabContext value={tab}>
           <Box sx={{ borderBottom: 1, borderColor: "divider" }}>

@@ -53,6 +53,9 @@ const getFilesDetail = (reportPath) => {
 
   report.forEach((result) => {
     const fileName = result.filePath.replace(DIR_PREFIX, "");
+    if (result.messages.length === 0) {
+      return;
+    }
 
     data[fileName] = { warnings: [], errors: [] };
 
